@@ -1,7 +1,4 @@
 ﻿#include "utils.h"
-//#include <cstdlib>
-
-
 
 int main()
 {
