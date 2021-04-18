@@ -24,4 +24,4 @@ deploy:
   on:
     branch: master
   script:
-  - curl -T print-ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -EagleEyesRD:$BINTRAY_API_KEY "https://travis-ci.com/github/EagleEyesRD/otus-print-ip/$TRAVIS_BUILD_NUMBER/print-ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  - curl -T  print-ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -EagleEyesRD:$BINTRAY_API_KEY "https://travis-ci.com/github/EagleEyesRD/otus-print-ip/$TRAVIS_BUILD_NUMBER/print-ip-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
