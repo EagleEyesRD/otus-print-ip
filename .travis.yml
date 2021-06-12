@@ -19,7 +19,6 @@ script:
 - cmake --build . --target package
 deploy:
   provider: pages
-  skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep_history: true
   on:
