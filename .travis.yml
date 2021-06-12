@@ -19,7 +19,7 @@ script:
 - cmake --build . --target package
 deploy:
   provider: pages
-  github_token: $GITHUB_TOKEN
+  token: $GITHUB_TOKEN
   keep_history: true
   on:
     branch: master
