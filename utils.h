@@ -1,5 +1,4 @@
 #pragma once
-#include <any>
 #include <iostream>
 #include <vector>
 #include <list>
@@ -26,115 +25,34 @@ std::ostream& operator <<(std::ostream& s, std::tuple<int, int, int, int> t) {
     return s;
 };
 
-template <typename T>
-auto calc_ip(T ip) {
-    std::vector<int> res;
-    long long sum = (long long)ip;
-    bool IsBeginIp = false;
-    for (int i = 7; i > -1; i--) {
-        long long XOctet = static_cast<long long>(std::pow(256, i));
-        if (sum > XOctet || i == 0)
-            IsBeginIp = true;
-
-        if (IsBeginIp) {
-            int part = static_cast<int>(sum / XOctet);
-            sum -= part * XOctet;
-            res.push_back(part);
-        }
+template<typename T>
+T calc_ip(T &sum, int i, bool startPrint) {
+    T XOctet = static_cast<T>(std::pow(256, i));
+    int part = static_cast<unsigned int>(sum / XOctet);
+    if (part > 0) startPrint = true;
+    sum -= part * XOctet;
+    if (i == 0 && part < 256) 
+        return (part >= 0 ? part : 256 + part);
+    else {
+        std::cout << (startPrint ? std::to_string(part) + "." : "");
+        calc_ip(sum, i - 1,startPrint);
     }
-    return res;
-};
+}
 
-template <>
-auto calc_ip(char ip) {
-    std::vector<int> res;
-    long long sum = (long long)ip;
-    bool IsBeginIp = false;
-    for (int i = 7; i > -1; i--) {
-        long long XOctet = static_cast<long long>(std::pow(256, i));
-        if (sum > XOctet || i == 0)
-            IsBeginIp = true;
-
-        if (IsBeginIp) {
-            int part = static_cast<int>(sum / XOctet);
-            sum -= part * XOctet;
-            res.push_back(part);
-        }
-    }
-    return res;
-};
-
-template <>
-auto calc_ip(int ip) {
-    std::vector<int> res;
-    long long sum = (long long)ip;
-    bool IsBeginIp = false;
-    for (int i = 7; i > -1; i--) {
-        long long XOctet = static_cast<long long>(std::pow(256, i));
-        if (sum > XOctet || i == 0)
-            IsBeginIp = true;
-
-        if (IsBeginIp) {
-            int part = static_cast<int>(sum / XOctet);
-            sum -= part * XOctet;
-            res.push_back(part);
-        }
-    }
-    return res;
-};
-
-template <>
-auto calc_ip(long long ip) {
-    std::vector<int> res;
-    long long sum = (long long)ip;
-    bool IsBeginIp = false;
-    for (int i = 7; i > -1; i--) {
-        long long XOctet = static_cast<long long>(std::pow(256, i));
-        if (sum > XOctet || i == 0)
-            IsBeginIp = true;
-
-        if (IsBeginIp) {
-            int part = static_cast<int>(sum / XOctet);
-            sum -= part * XOctet;
-            res.push_back(part);
-        }
-    }
-    return res;
-};
-
-template<typename ContainerType>
-void print_ip(const ContainerType& t) {
-    std::any x = t;
-    if (std::is_fundamental<ContainerType>::value) {
-        if (typeid(ContainerType).name() == typeid(long long).name()) {
-            try
-            {
-                long long y = std::any_cast<long long>(x);
-                std::cout << calc_ip<long long>(y);
-            }
-            catch (const std::bad_any_cast& e)
-            {
-                std::cout << e.what() << std::endl;
-            }
-        }
-
-        if (typeid(ContainerType).name() == typeid(char).name()) {
-            char xxx = std::any_cast<char>(x);
-            if (xxx < 0) {
-                unsigned char xx = (unsigned char)(xxx);
-                std::cout << (int)xx;
-            }
-        }
-
-        if (typeid(ContainerType).name() == typeid(short).name())
-            std::cout << t;
-
-    }
+template<typename T, typename = std::enable_if_t<std::is_fundamental<T>::value, T>>
+void print_ip(const T &ip) {
+    T sum = ip;
+    if (ip > 0)
+        std::cout << calc_ip(sum, 7, false);
     else
-        std::cout << t;
+        std::cout << (ip >= 0 ? ip : 256 + ip);
 
     std::cout << std::endl;
 };
 
+template<typename T, typename = std::enable_if_t<!std::is_fundamental<T>::value, T>>
+void print_ip(T&& ip) {
+    std::cout << ip << std::endl;
+}
 
 
