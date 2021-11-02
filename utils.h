@@ -1,15 +1,28 @@
 #pragma once
 #include <sstream>
-#include <utility>
+//#include <utility>
 #include <iostream>
 #include <vector>
 #include <list>
-#include <tuple>
+//#include <tuple>
 #include <string>
 #include <type_traits>
-#include <typeinfo>
-#include <initializer_list>
-#include <typeindex>
+//#include <typeinfo>
+//#include <initializer_list>
+//#include <typeindex>
+
+template <typename T>
+struct is_container {};
+
+template <typename T>
+struct is_container<std::vector<T>> {
+    static constexpr bool value = true;
+};
+
+template <typename T>
+struct is_container<std::list<T>> {
+    static constexpr bool value = true;
+};
 
 template<typename T>
 T calc_ip(T& sum, int i, bool startPrint) {
@@ -25,9 +38,9 @@ T calc_ip(T& sum, int i, bool startPrint) {
     }
 }
 
-template<typename T,
+template<typename T, 
     typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-void print_ip(const T& ip) {
+void print_ip(T&& ip) {
     T sum = ip;
     if (ip > 0)
         std::cout << calc_ip(sum, 7, false);
@@ -41,10 +54,9 @@ void print_ip(std::string ip) {
     std::cout << ip << std::endl;
 };
 
-template<typename Container,
-    typename = decltype(std::declval<Container>().cbegin()),
-    typename = decltype(std::declval<Container>().cend())>
-void print_ip(const Container& ip) {
+template <typename T,
+typename = typename std::enable_if<is_container<T>::value, T>::type>
+void print_ip(T ip) {
     std::stringstream ss;
     for (auto item_ptr = ip.cbegin(); item_ptr != ip.cend(); item_ptr++) {
         if (item_ptr != ip.cbegin())
@@ -53,4 +65,3 @@ void print_ip(const Container& ip) {
     }
     std::cout << ss.str() << std::endl;
 }
-
